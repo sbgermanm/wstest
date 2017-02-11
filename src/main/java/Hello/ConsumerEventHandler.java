@@ -1,8 +1,14 @@
 package Hello;
 
 import com.lmax.disruptor.EventHandler;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
-public class LongEventHandler implements EventHandler<Dato> {
+public class ConsumerEventHandler implements EventHandler<Dato> {
+
+    private static final Logger log = LoggerFactory.getLogger(ConsumerEventHandler.class);
+
+
     public void onEvent(Dato event, long sequence, boolean endOfBatch) {
         System.out.println("Dato: id=" + event.getId() + " content=" + event.getContent());
 

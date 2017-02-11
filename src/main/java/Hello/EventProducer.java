@@ -4,11 +4,11 @@ import com.lmax.disruptor.RingBuffer;
 
 import java.nio.ByteBuffer;
 
-public class LongEventProducer
+public class EventProducer
 {
     private final RingBuffer<Dato> ringBuffer;
 
-    public LongEventProducer(RingBuffer<Dato> ringBuffer)
+    public EventProducer(RingBuffer<Dato> ringBuffer)
     {
         this.ringBuffer = ringBuffer;
     }

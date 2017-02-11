@@ -2,11 +2,13 @@ package Hello;
 
 import com.lmax.disruptor.RingBuffer;
 import com.lmax.disruptor.dsl.Disruptor;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.nio.ByteBuffer;
+import java.time.Clock;
 import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
 import java.util.concurrent.atomic.AtomicLong;
@@ -19,24 +21,27 @@ public class ServicioController {
 
     private static final String template = "Hello, %s!";
     private final AtomicLong counter = new AtomicLong();
-    private static final Disruptor<Dato> disruptor = startDisruptor();
+    private static final RingBuffer<Dato> ringBuffer = getRingBuffer();
+//    private static final Logger log = LoggerFactory.getLogger(ServicioController.class);
 
-    @RequestMapping("/dameargo")
+    @RequestMapping("/onlySendData")
     public Dato greeting(@RequestParam(value = "name", defaultValue = "World") String name) throws InterruptedException {
-
-
         // Get the ring buffer from the Disruptor to be used for publishing.
-        RingBuffer<Dato> ringBuffer = disruptor.getRingBuffer();
+        System.out.println("Request recevied, name = " + name);
 
-        LongEventProducer producer = new LongEventProducer(ringBuffer);
-
-
+        EventProducer producer = new EventProducer(ringBuffer);
         Dato dato = new Dato(counter.incrementAndGet(),
                 String.format(template, name));
         producer.onData(dato);
-//            Thread.sleep(1000);
+        System.out.println("Thead free, name = " + name);
 
         return dato;
+    }
+
+    private static RingBuffer<Dato> getRingBuffer() {
+        Disruptor<Dato> disruptor = startDisruptor();
+
+        return disruptor.getRingBuffer();
     }
 
 
@@ -54,10 +59,12 @@ public class ServicioController {
         Disruptor<Dato> disruptor = new Disruptor<>(factory, bufferSize, executor);
 
         // Connect the handler
-        disruptor.handleEventsWith(new LongEventHandler());
+        disruptor.handleEventsWith(new ConsumerEventHandler());
 
         // Start the Disruptor, starts all threads running
         disruptor.start();
         return disruptor;
     }
+
+
 }
