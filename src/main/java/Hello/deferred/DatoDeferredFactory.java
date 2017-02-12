@@ -1,5 +1,6 @@
-package Hello;
+package Hello.deferred;
 
+import Hello.deferred.DatoDeferred;
 import com.lmax.disruptor.EventFactory;
 
 public class DatoDeferredFactory implements EventFactory<DatoDeferred>

@@ -1,4 +1,4 @@
-package Hello;
+package Hello.competableFuture;
 
 /**
  * Created by sgerman on 11/02/2017.

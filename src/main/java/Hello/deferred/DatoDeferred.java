@@ -1,5 +1,6 @@
-package Hello;
+package Hello.deferred;
 
+import Hello.Dato;
 import org.springframework.web.context.request.async.DeferredResult;
 
 /**

@@ -1,17 +1,17 @@
-package Hello;
+package Hello.deferred;
 
+import Hello.*;
+import Hello.competableFuture.TaskService;
 import com.lmax.disruptor.RingBuffer;
 import com.lmax.disruptor.dsl.Disruptor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.context.request.async.DeferredResult;
 
-import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
 import java.util.concurrent.atomic.AtomicLong;
@@ -77,7 +77,8 @@ public class AsyncDeferredController {
         Disruptor<DatoDeferred> disruptor = new Disruptor<>(factory, bufferSize, executor);
 
         // Connect the handler
-        disruptor.handleEventsWith(new ConsumerEventDeferredHandler());
+        disruptor.handleEventsWith(new MultipleConsumerEventDeferredHandler());
+
 
         // Start the Disruptor, starts all threads running
         disruptor.start();
