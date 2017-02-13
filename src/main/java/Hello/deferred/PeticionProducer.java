@@ -1,23 +1,22 @@
 package Hello.deferred;
 
-import Hello.deferred.DatoDeferred;
 import com.lmax.disruptor.RingBuffer;
 
-public class EventDeferredProducer
+public class PeticionProducer
 {
-    private final RingBuffer<DatoDeferred> ringBuffer;
+    private final RingBuffer<Peticion> ringBuffer;
 
-    public EventDeferredProducer(RingBuffer<DatoDeferred> ringBuffer)
+    public PeticionProducer(RingBuffer<Peticion> ringBuffer)
     {
         this.ringBuffer = ringBuffer;
     }
 
-    public void onData(DatoDeferred bb)
+    public void onData(Peticion bb)
     {
         long sequence = ringBuffer.next();  // Grab the next sequence
         try
         {
-            DatoDeferred dato = ringBuffer.get(sequence); // Get the entry in the Disruptor
+            Peticion dato = ringBuffer.get(sequence); // Get the entry in the Disruptor
             // for the sequence
             dato.set(bb);  // Fill with data
         }

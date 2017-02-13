@@ -1,7 +1,7 @@
 package Hello.deferred;
 
-import Hello.*;
 import Hello.competableFuture.TaskService;
+import Hello.noResponseRequest.Dato;
 import com.lmax.disruptor.RingBuffer;
 import com.lmax.disruptor.dsl.Disruptor;
 import org.slf4j.Logger;
@@ -25,7 +25,7 @@ public class AsyncDeferredController {
 
     private static final String template = "Hello, %s!";
     private final AtomicLong counter = new AtomicLong();
-    private static final RingBuffer<DatoDeferred> ringBuffer = getRingBuffer();
+    private static final RingBuffer<Peticion> ringBuffer = getRingBuffer();
 
     @Autowired
     public AsyncDeferredController(TaskService taskService) {
@@ -36,12 +36,10 @@ public class AsyncDeferredController {
     public DeferredResult<Dato> executeSlowTask(@RequestParam(value = "name", defaultValue = "World") String name) {
         logger.info("Request " + name + " received");
         DeferredResult<Dato> deferredResult = new DeferredResult<>();
-//        CompletableFuture.supplyAsync(taskService::execute())
-//                .whenCompleteAsync((result, throwable) -> deferredResult.setResult(result));
 
 
-        EventDeferredProducer producer = new EventDeferredProducer(ringBuffer);
-        DatoDeferred dato = new DatoDeferred(counter.incrementAndGet(),
+        PeticionProducer producer = new PeticionProducer(ringBuffer);
+        Peticion dato = new Peticion(counter.incrementAndGet(),
                 String.format(template, name), deferredResult);
         producer.onData(dato);
 
@@ -56,28 +54,28 @@ public class AsyncDeferredController {
 
 
 
-    private static RingBuffer<DatoDeferred> getRingBuffer() {
-        Disruptor<DatoDeferred> disruptor = startDisruptor();
+    private static RingBuffer<Peticion> getRingBuffer() {
+        Disruptor<Peticion> disruptor = startDisruptor();
 
         return disruptor.getRingBuffer();
     }
 
 
-    private static Disruptor<DatoDeferred> startDisruptor() {
+    private static Disruptor<Peticion> startDisruptor() {
         // Executor that will be used to construct new threads for consumers
         Executor executor = Executors.newFixedThreadPool(100);
 
         // The factory for the event
-        DatoDeferredFactory factory = new DatoDeferredFactory();
+        PeticionFactory factory = new PeticionFactory();
 
         // Specify the size of the ring buffer, must be power of 2.
         int bufferSize = 8192;
 
         // Construct the Disruptor
-        Disruptor<DatoDeferred> disruptor = new Disruptor<>(factory, bufferSize, executor);
+        Disruptor<Peticion> disruptor = new Disruptor<>(factory, bufferSize, executor);
 
         // Connect the handler
-        disruptor.handleEventsWith(new MultipleConsumerEventDeferredHandler());
+        disruptor.handleEventsWith(new MultiThreadPeticionConsumer());
 
 
         // Start the Disruptor, starts all threads running

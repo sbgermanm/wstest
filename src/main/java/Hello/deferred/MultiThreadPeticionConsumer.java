@@ -1,23 +1,20 @@
 package Hello.deferred;
 
-import Hello.Dato;
+import Hello.noResponseRequest.Dato;
 import com.lmax.disruptor.EventHandler;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.http.ResponseEntity;
-import org.springframework.util.LinkedMultiValueMap;
-import org.springframework.util.MultiValueMap;
 
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
-public class MultipleConsumerEventDeferredHandler implements EventHandler<DatoDeferred> {
+public class MultiThreadPeticionConsumer implements EventHandler<Peticion> {
 
     private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
-    ExecutorService executorService = Executors.newFixedThreadPool(4);
+    ExecutorService executorService = Executors.newFixedThreadPool(8);
 
-    public void onEvent(DatoDeferred event, long sequence, boolean endOfBatch) {
+    public void onEvent(Peticion event, long sequence, boolean endOfBatch) {
 
 
         executorService.execute(new Runnable() {

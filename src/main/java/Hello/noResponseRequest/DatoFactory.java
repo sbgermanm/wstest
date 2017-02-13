@@ -1,5 +1,6 @@
-package Hello;
+package Hello.noResponseRequest;
 
+import Hello.noResponseRequest.Dato;
 import com.lmax.disruptor.EventFactory;
 
 public class DatoFactory implements EventFactory<Dato>

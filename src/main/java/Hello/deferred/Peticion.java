@@ -1,29 +1,29 @@
 package Hello.deferred;
 
-import Hello.Dato;
+import Hello.noResponseRequest.Dato;
 import org.springframework.web.context.request.async.DeferredResult;
 
 /**
  * Created by sgerman on 11/02/2017.
  */
-public class DatoDeferred {
+public class Peticion {
     Dato dato;
     DeferredResult<Dato> deferredResult;
 
-    public DatoDeferred(Dato dato, DeferredResult<Dato> deferredResult) {
+    public Peticion(Dato dato, DeferredResult<Dato> deferredResult) {
         this.dato = dato;
         this.deferredResult = deferredResult;
     }
 
-    public DatoDeferred() {
+    public Peticion() {
     }
 
-    public DatoDeferred(long l, String format, DeferredResult<Dato> deferredResult) {
+    public Peticion(long l, String format, DeferredResult<Dato> deferredResult) {
         this.dato = new Dato(l, format);
         this.deferredResult = deferredResult;
     }
 
-    public void set(DatoDeferred bb) {
+    public void set(Peticion bb) {
         this.dato = bb.getDato();
         this.deferredResult = bb.deferredResult;
     }

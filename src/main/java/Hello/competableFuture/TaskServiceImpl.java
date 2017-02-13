@@ -9,13 +9,17 @@ public class TaskServiceImpl implements TaskService {
     private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
     @Override
-    public String execute(String name) {
+    public Dato execute(Dato dato) {
+        logger.info("Dato: id=" + dato.getId() + " content=" + dato.getContent());
         try {
-            Thread.sleep(5000);
-            logger.info("Slow task executed");
-            return "Task finished";
+
+            Thread.sleep(1000);
+            logger.info("Procesado Dato: id=" + dato.getId() + " content=" + dato.getContent());
+
+            return new Dato(dato.getId(), "Ha sido procesado : " + dato.getContent());
         } catch (InterruptedException e) {
             throw new RuntimeException();
         }
     }
+
 }
