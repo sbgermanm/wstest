@@ -16,6 +16,8 @@ import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
 import java.util.concurrent.atomic.AtomicLong;
 
+import static Hello.Application.RING_BUFFER_SIZE;
+
 @RestController
 public class AsyncDeferredController {
     private final Logger logger = LoggerFactory.getLogger(this.getClass());
@@ -69,7 +71,7 @@ public class AsyncDeferredController {
         PeticionFactory factory = new PeticionFactory();
 
         // Specify the size of the ring buffer, must be power of 2.
-        int bufferSize = 8192;
+        int bufferSize = RING_BUFFER_SIZE;
 
         // Construct the Disruptor
         Disruptor<Peticion> disruptor = new Disruptor<>(factory, bufferSize, executor);

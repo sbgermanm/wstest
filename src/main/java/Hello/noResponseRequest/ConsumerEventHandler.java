@@ -4,6 +4,8 @@ import com.lmax.disruptor.EventHandler;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import static Hello.Application.LONG_TASK_TIME;
+
 public class ConsumerEventHandler implements EventHandler<Dato> {
 
     private static final Logger log = LoggerFactory.getLogger(ConsumerEventHandler.class);
@@ -14,7 +16,7 @@ public class ConsumerEventHandler implements EventHandler<Dato> {
 
 
         try {
-            Thread.sleep(1000);
+            Thread.sleep(LONG_TASK_TIME);
         } catch (InterruptedException e) {
             e.printStackTrace();
         }

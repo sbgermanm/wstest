@@ -12,14 +12,18 @@ import org.springframework.web.context.request.async.DeferredResult;
 
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.Executor;
+import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.atomic.AtomicLong;
+
+import static Hello.Application.CONSUMER_N_THREADS;
 
 @RestController
 public class AsyncController {
     private final Logger logger = LoggerFactory.getLogger(this.getClass());
     private final TaskService taskService;
 
+    ExecutorService executorService = Executors.newFixedThreadPool(CONSUMER_N_THREADS);
 
 
     private static final String template = "Hello, %s!";
@@ -36,7 +40,7 @@ public class AsyncController {
         Dato dato = new Dato(counter.getAndIncrement(), name);
         DeferredResult<Dato> deferredResult = new DeferredResult<>();
 
-        CompletableFuture.supplyAsync(() -> taskService.execute(dato)).whenCompleteAsync((result, throwable) -> deferredResult.setResult(result));
+        CompletableFuture.supplyAsync(() -> taskService.execute(dato), executorService).whenCompleteAsync((result, throwable) -> deferredResult.setResult(result));
 
 
 
